@@ -64,11 +64,18 @@ export class CommitPageComponent implements OnInit {
 
   public getAllCommits(): void {
     if (!this.viewerForm.valid) return;
-    const payload: ICommitRequest = this.viewerForm.value;
+    const payload: ICommitRequest = this.trimFormValues(this.viewerForm.getRawValue());
     this.commitService.getAllCommits(payload).subscribe({
       next: this.handleGetSuccess.bind(this),
       error: this.handleError.bind(this)
     })
+  }
+
+  private trimFormValues(formValues: ICommitRequest): ICommitRequest {
+    const payload: ICommitRequest = formValues;
+    payload.repo = payload.repo.trim();
+    payload.username = payload.username.trim();
+    return payload;
   }
 
   private handleGetSuccess(res: IApiResponse<ICommitData[]>) {
